@@ -6,6 +6,8 @@ import Footer from './components/Footer'
 import Home from './pages/Home'
 import Favoriten from './pages/Favoriten'
 import Ueber from './pages/Ueber'
+import NotFound from './pages/NotFound'
+import WetterDetail from './pages/WetterDetail'
 
 function App() {
   const [istDunkel, setIstDunkel] = useState(() => {
@@ -31,6 +33,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/favoriten" element={<Favoriten />} />
               <Route path="/ueber" element={<Ueber />} />
+              <Route path="*" element={<NotFound />} />
+              <Route path="/wetter/:city" element={<WetterDetail />} />
             </Routes>
           </main>
           <Footer />

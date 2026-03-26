@@ -1,21 +1,72 @@
-import { useContext } from 'react'
-import ThemeContext from '../context/ThemeContext'
+// src/pages/Favoriten.jsx
+import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function Favoriten() {
-  const { istDunkel } = useContext(ThemeContext)
+  const navigate = useNavigate();
+  const [favoriten, setFavoriten] = useState([]);
+
+  // Favoriten aus localStorage laden
+  useEffect(() => {
+    const stored = localStorage.getItem("wetter-favoriten");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setFavoriten(parsed);
+        }
+      } catch (e) {
+        console.error("Fehler beim Lesen von wetter-favoriten:", e);
+      }
+    }
+  }, []);
+
+  function handleStadtKlick(city) {
+    // Zu "/" navigieren und Stadt im state übergeben
+    navigate("/", { state: { city: city } });
+  }
+
+  function handleLoeschen(city) {
+    const updated = favoriten.filter((c) => c !== city);
+    setFavoriten(updated);
+    localStorage.setItem("wetter-favoriten", JSON.stringify(updated));
+  }
+
+  if (favoriten.length === 0) {
+    return (
+      <div>
+        <h2>Favoriten</h2>
+        <p>Keine Favoriten gespeichert.</p>
+        {/* Link zurück zur Startseite */}
+        <Link to="/">Zur Startseite</Link>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-md mx-auto text-center">
-      <h1 className="text-3xl font-bold mb-6">
-        Meine <span className="text-blue-500">Favoriten</span>
-      </h1>
-      <p className={`${istDunkel ? 'text-gray-400' : 'text-gray-500'}`}>
-        Hier werden gespeicherte Staedte angezeigt.
-      </p>
-      {/* TODO: Favoriten-Liste aus localStorage laden und anzeigen */}
-      {/* TODO: Klick auf Favorit navigiert zu / mit der Stadt */}
+    <div>
+      <h2>Meine Favoriten</h2>
+      <div className="favoriten-grid">
+        {favoriten.map((city) => (
+          <div
+            key={city}
+            className="favoriten-karte"
+            onClick={() => handleStadtKlick(city)}
+          >
+            <h3>{city}</h3>
+            <button
+              onClick={(event) => {
+                event.stopPropagation();
+                handleLoeschen(city);
+              }}
+            >
+              Löschen
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
-  )
+  );
 }
 
-export default Favoriten
+export default Favoriten;
