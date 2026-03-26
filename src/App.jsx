@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import ThemeContext from './context/ThemeContext'
 import Navbar from './components/Navbar'
@@ -23,7 +23,7 @@ function App() {
 
   return (
     <ThemeContext.Provider value={{ istDunkel, toggleDarkMode }}>
-      <BrowserRouter>
+      <HashRouter>
         <div className={`min-h-screen flex flex-col transition-colors duration-300 ${
           istDunkel ? 'bg-gray-900 text-gray-100' : 'bg-blue-50 text-gray-900'
         }`}>
@@ -39,7 +39,7 @@ function App() {
           </main>
           <Footer />
         </div>
-      </BrowserRouter>
+      </HashRouter>
     </ThemeContext.Provider>
   )
 }
